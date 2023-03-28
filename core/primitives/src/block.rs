@@ -4,6 +4,8 @@ use std::sync::Arc;
 use crate::time::{Clock, Utc};
 use borsh::{BorshDeserialize, BorshSerialize};
 
+use serde::{Deserialize, Serialize};
+
 use chrono::DateTime;
 use near_crypto::Signature;
 use primitive_types::U256;
@@ -45,7 +47,7 @@ pub enum BlockValidityError {
     InvalidChallengeRoot,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq)]
+#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
 pub struct BlockV1 {
     pub header: BlockHeader,
     pub chunks: Vec<ShardChunkHeaderV1>,
@@ -56,7 +58,7 @@ pub struct BlockV1 {
     pub vrf_proof: near_crypto::vrf::Proof,
 }
 
-#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq)]
+#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
 pub struct BlockV2 {
     pub header: BlockHeader,
     pub chunks: Vec<ShardChunkHeader>,
@@ -69,7 +71,7 @@ pub struct BlockV2 {
 
 /// Versioned Block data structure.
 /// For each next version, document what are the changes between versions.
-#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq)]
+#[derive(BorshSerialize, BorshDeserialize, Debug, Clone, Eq, PartialEq, Deserialize, Serialize)]
 pub enum Block {
     BlockV1(Arc<BlockV1>),
     BlockV2(Arc<BlockV2>),

@@ -554,10 +554,24 @@ pub(crate) fn view_chain(
             }
             None => {
                 let head = chain_store.head().unwrap();
-                chain_store.get_block(&head.last_block_hash).unwrap()
+                chain_store.get_block(&head.last_block_hash).expect("Block does not exist")
             }
         }
-    };
+    };  
+   // println!("BLOCK 1: {:#?}", block);
+     let mut height_tmp = 87494779;
+    while height_tmp > 9820221 {
+        if chain_store.get_block_hash_by_height(height_tmp).is_ok(){
+            break;
+        }
+        height_tmp = height_tmp - 1;
+    } 
+
+   let block_prev_hash = chain_store.get_block_hash_by_height(height_tmp).expect("Prev block does not exist");
+    let block_2 = chain_store.get_block(&block_prev_hash).expect("couldnt find second block");
+
+    println!("BLOCK 2: {:#?}", block_2);
+
     let epoch_manager = EpochManager::new_from_genesis_config(store, &near_config.genesis.config)
         .expect("Failed to start Epoch Manager");
     let shard_layout = epoch_manager.get_shard_layout(block.header().epoch_id()).unwrap();
